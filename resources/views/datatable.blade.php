@@ -33,7 +33,6 @@
         serverSide: @js($getServerSide())
     })"
     wire:ignore
-    class="max-w-7xl w-full h-full border-2 rounded-lg p-4"
 >
     <table x-ref="table"></table>
 </div>
