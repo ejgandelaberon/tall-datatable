@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable;
+namespace Emsephron\TallDatatable;
 
-use Emsephron\TallDatatable\DataTable\DTO\AjaxData;
-use Emsephron\TallDatatable\DataTable\DTO\AjaxOrder;
-use Emsephron\TallDatatable\DataTable\DTO\AjaxSearch;
-use Emsephron\TallDatatable\DataTable\DTO\Response;
+use Emsephron\TallDatatable\DTO\AjaxData;
+use Emsephron\TallDatatable\DTO\AjaxOrder;
+use Emsephron\TallDatatable\DTO\AjaxSearch;
+use Emsephron\TallDatatable\DTO\Response;
 use Illuminate\Database\Eloquent\Builder;
 
 trait InteractsWithDataTable

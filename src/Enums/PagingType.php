@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable\Enums;
+namespace Emsephron\TallDatatable\Enums;
 
 enum PagingType: string
 {

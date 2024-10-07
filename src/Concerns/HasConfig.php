@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable\Concerns;
+namespace Emsephron\TallDatatable\Concerns;
 
-use Emsephron\TallDatatable\DataTable\Column;
-use Emsephron\TallDatatable\DataTable\DTO\ConfigRenderer;
-use Emsephron\TallDatatable\DataTable\DTO\ConfigSearch;
-use Emsephron\TallDatatable\DataTable\Enums\PagingType;
+use Emsephron\TallDatatable\Column;
+use Emsephron\TallDatatable\DTO\ConfigRenderer;
+use Emsephron\TallDatatable\DTO\ConfigSearch;
+use Emsephron\TallDatatable\Enums\PagingType;
 
 trait HasConfig
 {

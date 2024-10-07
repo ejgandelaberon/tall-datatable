@@ -2,17 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable;
+namespace Emsephron\TallDatatable;
 
+use Emsephron\TallDatatable\Concerns\BelongsToLivewire;
+use Emsephron\TallDatatable\Concerns\CollectsPublicGetters;
+use Emsephron\TallDatatable\Concerns\HasConfig;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 use Livewire\Component;
 
 class DataTable implements Htmlable
 {
-    use \Emsephron\TallDatatable\DataTable\Concerns\BelongsToLivewire;
-    use \Emsephron\TallDatatable\DataTable\Concerns\CollectsPublicGetters;
-    use \Emsephron\TallDatatable\DataTable\Concerns\HasConfig;
+    use BelongsToLivewire;
+    use CollectsPublicGetters;
+    use HasConfig;
 
     final private function __construct(protected Component $livewire)
     {
@@ -26,7 +29,7 @@ class DataTable implements Htmlable
 
     public function render(): Renderable
     {
-        return view('components.datatable', $this->collectPublicGetters());
+        return view('tall-datatable::datatable', $this->collectPublicGetters());
     }
 
     public function toHtml(): string

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable\DTO;
+namespace Emsephron\TallDatatable\DTO;
 
-use Emsephron\TallDatatable\DataTable\Column;
+use Emsephron\TallDatatable\Column;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;

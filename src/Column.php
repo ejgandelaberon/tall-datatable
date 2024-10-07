@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable;
+namespace Emsephron\TallDatatable;
 
 use Closure;
-use Emsephron\TallDatatable\DataTable\DTO\AjaxSearch;
+use Emsephron\TallDatatable\DTO\AjaxSearch;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

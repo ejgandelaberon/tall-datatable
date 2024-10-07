@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable\Concerns;
+namespace Emsephron\TallDatatable\Concerns;
 
 use Livewire\Component;
 

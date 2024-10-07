@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable\DataTable\DTO;
+namespace Emsephron\TallDatatable\DTO;
 
 use Illuminate\Contracts\Support\Arrayable;
 

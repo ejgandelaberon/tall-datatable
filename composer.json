@@ -13,6 +13,19 @@
             "email": "emsephron@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.3",
+        "livewire/livewire": "^3.0",
+        "illuminate/view": "^11.0",
+        "illuminate/support": "^11.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Emsephron\\TallDatatable\\TallDatatableServiceProvider"
+            ]
+        }
+    }
 }
