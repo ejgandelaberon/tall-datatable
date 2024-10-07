@@ -34,5 +34,5 @@
     })"
     wire:ignore
 >
-    <table x-ref="table"></table>
+    <table x-ref="table" id="{{ $getId() }}"></table>
 </div>

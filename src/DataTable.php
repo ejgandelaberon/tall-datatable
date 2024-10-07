@@ -17,6 +17,8 @@ class DataTable implements Htmlable
     use CollectsPublicGetters;
     use HasConfig;
 
+    protected ?string $id = null;
+
     final private function __construct(protected Component $livewire)
     {
         //
@@ -35,5 +37,17 @@ class DataTable implements Htmlable
     public function toHtml(): string
     {
         return $this->render()->render();
+    }
+
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    public function id(?string $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }
