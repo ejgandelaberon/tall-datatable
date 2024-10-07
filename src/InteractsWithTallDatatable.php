@@ -9,14 +9,23 @@ use Emsephron\TallDatatable\DTO\AjaxData;
 use Emsephron\TallDatatable\DTO\AjaxOrder;
 use Emsephron\TallDatatable\DTO\AjaxSearch;
 use Emsephron\TallDatatable\DTO\Response;
+use Emsephron\TallDatatable\Exception\UnimplementedHasTallDatatableInterface;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
 trait InteractsWithTallDatatable
 {
     protected DataTable $dataTable;
 
+    /**
+     * @throws Exception
+     */
     public function bootedInteractsWithTallDatatable(): void
     {
+        if (! $this instanceof HasTallDatatable) {
+            throw UnimplementedHasTallDatatableInterface::fromComponent($this);
+        }
+
         $this->dataTable = $this->dataTable(
             DataTable::make($this)
         );
