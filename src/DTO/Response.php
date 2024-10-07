@@ -18,7 +18,7 @@ class Response implements Arrayable
     /**
      * @param  array<string, mixed>  $data
      */
-    public function __construct(
+    final public function __construct(
         public int $draw,
         public array $data,
         public int $recordsTotal,
@@ -53,21 +53,21 @@ class Response implements Arrayable
     /**
      * @param  Builder<Model>  $query
      */
-    protected static function applySearch(Builder $query, AjaxData $request): void
+    protected static function applySearch(Builder $query, AjaxData $data): void
     {
-        if ($request->search?->value) {
-            foreach ($request->columns as $column) {
+        if ($data->search?->value) {
+            foreach ($data->columns as $column) {
                 if (! $column->isSearchable()) {
                     continue;
                 }
 
                 if ($callback = $column->getSearchCallback()) {
-                    $callback($query, $request->search->value);
+                    $callback($query, $data->search->value);
 
                     continue;
                 }
 
-                $query->orWhereLike($column->getName(), "%{$request->search->value}%");
+                $query->orWhereLike($column->getName(), "%{$data->search->value}%");
             }
         }
     }
@@ -75,16 +75,16 @@ class Response implements Arrayable
     /**
      * @param  Builder<Model>  $query
      */
-    protected static function applyOrder(Builder $query, AjaxData $request): void
+    protected static function applyOrder(Builder $query, AjaxData $data): void
     {
-        if ($request->order) {
+        if ($data->order) {
             /** @var string[] $orderableColumns */
-            $orderableColumns = collect($request->columns)
+            $orderableColumns = collect($data->columns)
                 ->filter(fn (Column $column): bool => $column->isOrderable())
                 ->map(fn (Column $column): ?string => $column->getData())
                 ->all();
 
-            foreach ($request->order as $order) {
+            foreach ($data->order as $order) {
                 $query->orderBy($orderableColumns[$order->column], $order->dir);
             }
         }
@@ -94,10 +94,10 @@ class Response implements Arrayable
      * @param  Builder<Model>  $query
      * @return LengthAwarePaginator<Model>
      */
-    protected static function paginate(Builder $query, AjaxData $request): LengthAwarePaginator
+    protected static function paginate(Builder $query, AjaxData $data): LengthAwarePaginator
     {
-        $length = $request->length;
-        $page = $request->start / $request->length + 1;
+        $length = $data->length;
+        $page = $data->start / $data->length + 1;
 
         if ($length === -1) {
             $length = $query->count();
