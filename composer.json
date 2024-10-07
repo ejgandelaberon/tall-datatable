@@ -27,5 +27,33 @@
                 "Emsephron\\TallDatatable\\TallDatatableServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.9",
+        "laravel/pint": "^1.18",
+        "pestphp/pest": "^3.3",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "orchestra/testbench": "^9.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "pint": [
+            "./vendor/bin/pint"
+        ],
+        "stan": [
+            "./vendor/bin/phpstan analyse --memory-limit=2G --ansi --no-progress --no-interaction --configuration=phpstan.neon"
+        ],
+        "test": [
+            "./vendor/bin/pest --parallel"
+        ],
+        "pr": [
+            "@composer pint",
+            "@composer stan",
+            "@composer test"
+        ]
     }
 }

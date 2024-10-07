@@ -119,7 +119,7 @@ trait HasConfig
     }
 
     /**
-     * @return Column
+     * @return ($raw is true ? array<string, mixed> : Column[])
      */
     public function getColumns(bool $raw = true): array
     {
