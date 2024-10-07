@@ -1,0 +1,14 @@
+{
+  "name": "tall-datatable",
+  "version": "1.0.0",
+  "description": "TALL stack wrapper for datatables",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emmanuel Joseph Beron",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
