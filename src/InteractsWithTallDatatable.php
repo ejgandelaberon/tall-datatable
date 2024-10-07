@@ -11,11 +11,11 @@ use Emsephron\TallDatatable\DTO\AjaxSearch;
 use Emsephron\TallDatatable\DTO\Response;
 use Illuminate\Database\Eloquent\Builder;
 
-trait InteractsWithDataTable
+trait InteractsWithTallDatatable
 {
     protected DataTable $dataTable;
 
-    public function bootedInteractsWithDataTable(): void
+    public function bootedInteractsWithTallDatatable(): void
     {
         $this->dataTable = $this->dataTable(
             DataTable::make($this)
