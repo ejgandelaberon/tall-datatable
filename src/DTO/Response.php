@@ -4,106 +4,132 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable\DTO;
 
+use Closure;
 use Emsephron\TallDatatable\Columns\Column;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @implements Arrayable<string, mixed>
- */
-class Response implements Arrayable
+class Response
 {
     /**
-     * @param  array<string, mixed>  $data
+     * @param  Closure[]  $rendererCallbacks
      */
     final public function __construct(
-        public int $draw,
-        public array $data,
-        public int $recordsTotal,
-        public int $recordsFiltered,
+        protected AjaxData $data,
+        protected Builder $query,
+        protected array $rendererCallbacks = [],
     ) {}
 
-    public function toArray(): array
+    /**
+     * @param  Closure[]  $rendererCallbacks
+     */
+    public static function make(AjaxData $data, Builder $query, array $rendererCallbacks = []): static
     {
+        return new static($data, $query, $rendererCallbacks);
+    }
+
+    /**
+     * @return array{
+     *     draw: int,
+     *     data: list<array<string, mixed>>,
+     *     recordsTotal: int,
+     *     recordsFiltered: int,
+     * }
+     */
+    public function send(): array
+    {
+        $this->applySearch();
+        $this->applyOrder();
+
+        $paginator = $this->paginate();
+
         return [
-            'draw' => $this->draw,
-            'data' => $this->data,
-            'recordsTotal' => $this->recordsTotal,
-            'recordsFiltered' => $this->recordsFiltered,
+            'draw' => $this->data->draw,
+            'data' => $this->applyRenderCallbacks($paginator),
+            'recordsTotal' => $paginator->total(),
+            'recordsFiltered' => $paginator->total(),
         ];
     }
 
-    public static function make(AjaxData $data, Builder $query): self
+    protected function applySearch(): void
     {
-        static::applySearch($query, $data);
-        static::applyOrder($query, $data);
+        $search = $this->data->search;
 
-        $paginator = static::paginate($query, $data);
-
-        return new self(
-            draw: $data->draw,
-            data: collect($paginator->items())->toArray(),
-            recordsTotal: $paginator->total(),
-            recordsFiltered: $paginator->total(),
-        );
-    }
-
-    /**
-     * @param  Builder<Model>  $query
-     */
-    protected static function applySearch(Builder $query, AjaxData $data): void
-    {
-        if ($data->search?->value) {
-            foreach ($data->columns as $column) {
+        if ($search) {
+            foreach ($this->data->columns as $column) {
                 if (! $column->isSearchable()) {
                     continue;
                 }
 
                 if ($callback = $column->getSearchCallback()) {
-                    $callback($query, $data->search->value);
+                    $callback($this->query, $search->value);
 
                     continue;
                 }
 
-                $query->orWhereLike($column->getName(), "%{$data->search->value}%");
+                $this->query->orWhereLike($column->getName(), "%{$search->value}%");
             }
         }
     }
 
-    /**
-     * @param  Builder<Model>  $query
-     */
-    protected static function applyOrder(Builder $query, AjaxData $data): void
+    protected function applyOrder(): void
     {
-        if ($data->order) {
+        if ($this->data->order) {
             /** @var string[] $orderableColumns */
-            $orderableColumns = collect($data->columns)
+            $orderableColumns = collect($this->data->columns)
                 ->filter(fn (Column $column): bool => $column->isOrderable())
                 ->map(fn (Column $column): ?string => $column->getData())
                 ->all();
 
-            foreach ($data->order as $order) {
-                $query->orderBy($orderableColumns[$order->column], $order->dir);
+            foreach ($this->data->order as $order) {
+                $this->query->orderBy($orderableColumns[$order->column], $order->dir);
             }
         }
     }
 
-    /**
-     * @param  Builder<Model>  $query
-     * @return LengthAwarePaginator<Model>
-     */
-    protected static function paginate(Builder $query, AjaxData $data): LengthAwarePaginator
+    protected function paginate(): LengthAwarePaginator
     {
-        $length = $data->length;
-        $page = $data->start / $data->length + 1;
+        $length = $this->data->length;
+        $page = $this->data->start / $this->data->length + 1;
 
         if ($length === -1) {
-            $length = $query->count();
+            $length = $this->query->count();
             $page = 1;
         }
 
-        return $query->paginate(perPage: $length, page: $page);
+        return $this->query->paginate(perPage: $length, page: $page);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function applyRenderCallbacks(LengthAwarePaginator $data): array
+    {
+        if ($data->isEmpty() || empty($this->rendererCallbacks)) {
+            return [];
+        }
+
+        /** @var Model[] $models */
+        $models = $data->items();
+
+        /** @var list<array<string, mixed>> $formatted */
+        $formatted = collect($models)->map(function (Model $model): array {
+            $row = [];
+
+            foreach ($this->data->columns as $column) {
+                $value = $model->getAttribute($column->getName());
+
+                if ($callback = $this->rendererCallbacks[$column->getData()] ?? null) {
+                    $value = $callback($model, $value) ?? $value;
+                }
+
+                $row[$column->getData()] = $value;
+            }
+
+            return $row;
+        })->toArray();
+
+        return $formatted;
     }
 }

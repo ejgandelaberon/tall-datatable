@@ -14,6 +14,7 @@ use Illuminate\Contracts\Support\Arrayable;
 class Column implements Arrayable
 {
     use Concerns\CanModifySearch;
+    use Concerns\HasLivewireRenderer;
 
     protected ?string $title = null;
 

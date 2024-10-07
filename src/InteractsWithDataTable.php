@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable;
 
+use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DTO\AjaxData;
 use Emsephron\TallDatatable\DTO\AjaxOrder;
 use Emsephron\TallDatatable\DTO\AjaxSearch;
@@ -31,12 +32,37 @@ trait InteractsWithDataTable
         $ajaxData = AjaxData::make($data['draw'])
             ->start($data['start'])
             ->length($data['length'])
-            ->columns($this->dataTable->getColumns(false)) // @phpstan-ignore-line
+            ->columns($this->getColumns())
             ->order(array_map(fn (array $order) => AjaxOrder::fromArray($order), $data['order']))
             ->search(AjaxSearch::fromArray($data['search']));
 
-        return Response::make($ajaxData, $this->query())->toArray();
+        return Response::make(
+            $ajaxData,
+            $this->query(),
+            $this->getColumnRenderers()
+        )->send();
     }
 
     abstract public function query(): Builder;
+
+    /**
+     * @return Column[]
+     */
+    protected function getColumns(): array
+    {
+        return once(fn (): array => $this->dataTable->getColumns(false));
+    }
+
+    protected function getColumnRenderers(): array
+    {
+        $renderers = [];
+
+        foreach ($this->getColumns() as $column) {
+            if ($callback = $column->getLivewireRenderer()) {
+                $renderers[$column->getData()] = $callback;
+            }
+        }
+
+        return $renderers;
+    }
 }
