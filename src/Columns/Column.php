@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Emsephron\TallDatatable;
+namespace Emsephron\TallDatatable\Columns;
 
 use Closure;
 use Emsephron\TallDatatable\DTO\AjaxSearch;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @implements Arrayable<string, mixed>
  */
 class Column implements Arrayable
 {
+    use Concerns\CanModifySearch;
+
     protected ?string $title = null;
 
     protected string $name;
@@ -26,8 +26,6 @@ class Column implements Arrayable
     protected AjaxSearch $search;
 
     protected string|array|Closure|null $render = null; // @phpstan-ignore-line
-
-    protected ?Closure $searchCallback = null;
 
     final private function __construct(protected string $data)
     {
@@ -167,20 +165,5 @@ class Column implements Arrayable
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @param  Closure(Builder<Model>, ?string): Builder<Model>  $callback
-     */
-    public function searchUsing(Closure $callback): static
-    {
-        $this->searchCallback = $callback;
-
-        return $this;
-    }
-
-    public function getSearchCallback(): ?Closure
-    {
-        return $this->searchCallback;
     }
 }

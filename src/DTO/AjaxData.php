@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable\DTO;
 
-use Emsephron\TallDatatable\Column;
+use Emsephron\TallDatatable\Columns\Column;
 use Illuminate\Contracts\Support\Arrayable;
 
 class AjaxData implements Arrayable

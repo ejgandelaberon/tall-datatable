@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable\Concerns;
 
-use Emsephron\TallDatatable\Column;
+use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DTO\ConfigRenderer;
 use Emsephron\TallDatatable\DTO\ConfigSearch;
 use Emsephron\TallDatatable\Enums\PagingType;
