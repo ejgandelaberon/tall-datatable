@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable\Concerns;
 
-use Livewire\Component;
+use Emsephron\TallDatatable\HasTallDatatable;
 
 trait BelongsToLivewire
 {
-    protected Component $livewire;
+    protected HasTallDatatable $livewire;
 
-    public function livewire(Component $livewire): static
+    public function livewire(HasTallDatatable $livewire): static
     {
         $this->livewire = $livewire;
 
         return $this;
     }
 
-    public function getLivewire(): Component
+    public function getLivewire(): HasTallDatatable
     {
         return $this->livewire;
     }

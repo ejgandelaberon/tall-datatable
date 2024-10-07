@@ -9,7 +9,6 @@ use Emsephron\TallDatatable\Concerns\CollectsPublicGetters;
 use Emsephron\TallDatatable\Concerns\HasConfig;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
-use Livewire\Component;
 
 class DataTable implements Htmlable
 {
@@ -19,12 +18,12 @@ class DataTable implements Htmlable
 
     protected ?string $id = null;
 
-    final private function __construct(protected Component $livewire)
+    final private function __construct(protected HasTallDatatable $livewire)
     {
         //
     }
 
-    public static function make(Component $livewire): static
+    public static function make(HasTallDatatable $livewire): static
     {
         return new static($livewire);
     }
@@ -41,7 +40,7 @@ class DataTable implements Htmlable
 
     public function getId(): ?string
     {
-        return $this->id;
+        return $this->id ?? $this->defaultId();
     }
 
     public function id(?string $id): static
@@ -49,5 +48,16 @@ class DataTable implements Htmlable
         $this->id = $id;
 
         return $this;
+    }
+
+    protected function defaultId(): string
+    {
+        $modelClass = class_basename($this->getLivewire()->query()->getModel());
+
+        return str($modelClass)
+            ->lower()
+            ->plural()
+            ->append('-table')
+            ->toString();
     }
 }
