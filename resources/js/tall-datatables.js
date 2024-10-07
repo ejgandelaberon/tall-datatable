@@ -36,14 +36,7 @@ const TallDatatable = (Alpine) => {
     }) => ({
         init() {
             this.table = new DataTable(this.$refs.table, {
-                ajax: async function (data, callback) {
-                    callback(
-                        await Livewire.find(livewireId).fetch({
-                            ...data,
-                            ...ajaxData,
-                        })
-                    );
-                },
+                ajax: this._ajaxCallback,
                 autoWidth,
                 caption,
                 columns,
@@ -101,6 +94,15 @@ const TallDatatable = (Alpine) => {
                 }
             );
         },
+
+        async _ajaxCallback(data, callback) {
+            callback(
+                await Livewire.find(livewireId).fetch({
+                    ...data,
+                    ...ajaxData,
+                })
+            );
+        }
     }));
 };
 
