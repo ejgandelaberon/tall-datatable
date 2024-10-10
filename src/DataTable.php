@@ -7,6 +7,7 @@ namespace Emsephron\TallDatatable;
 use Emsephron\TallDatatable\Concerns\BelongsToLivewire;
 use Emsephron\TallDatatable\Concerns\CollectsPublicGetters;
 use Emsephron\TallDatatable\Concerns\HasConfig;
+use Emsephron\TallDatatable\Concerns\HasErrorMode;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\Support\Renderable;
 
@@ -15,6 +16,7 @@ class DataTable implements Htmlable
     use BelongsToLivewire;
     use CollectsPublicGetters;
     use HasConfig;
+    use HasErrorMode;
 
     protected ?string $id = null;
 

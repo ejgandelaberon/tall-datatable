@@ -32,6 +32,11 @@
         searching: @js($getSearching()),
         serverSide: @js($getServerSide())
     })"
+    x-init="
+        setErrorMode(
+            @js($getErrorMode())
+        )
+    "
     wire:ignore
 >
     <table x-ref="table" id="{{ $getId() }}"></table>

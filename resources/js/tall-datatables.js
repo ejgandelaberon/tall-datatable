@@ -102,6 +102,10 @@ const TallDatatable = (Alpine) => {
                     ...ajaxData,
                 })
             );
+        },
+
+        setErrorMode(mode = 'alert') {
+            DataTable.ext.errMode = mode;
         }
     }));
 };
