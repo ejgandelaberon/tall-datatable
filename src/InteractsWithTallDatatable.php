@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Emsephron\TallDatatable;
 
+use Closure;
 use Emsephron\TallDatatable\Columns\Column;
 use Emsephron\TallDatatable\DTO\AjaxData;
 use Emsephron\TallDatatable\DTO\AjaxOrder;
@@ -18,6 +19,11 @@ trait InteractsWithTallDatatable
     protected DataTable $dataTable;
 
     /**
+     * @var Closure(int, string): void|null
+     */
+    protected ?Closure $errorCallback = null;
+
+    /**
      * @throws Exception
      */
     public function bootedInteractsWithTallDatatable(): void
@@ -29,6 +35,10 @@ trait InteractsWithTallDatatable
         $this->dataTable = $this->dataTable(
             DataTable::make($this)
         );
+
+        if (($errorCallback = $this->dataTable->getErrorMode()) instanceof Closure) {
+            $this->errorCallback = $errorCallback;
+        }
     }
 
     public function dataTable(DataTable $dataTable): DataTable
@@ -50,6 +60,13 @@ trait InteractsWithTallDatatable
             $this->query(),
             $this->getColumnRenderers()
         )->send();
+    }
+
+    public function handleError(int $techNote, string $message): void
+    {
+        if (($callback = $this->errorCallback) instanceof Closure) {
+            $callback($techNote, $message);
+        }
     }
 
     abstract public function query(): Builder;

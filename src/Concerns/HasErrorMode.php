@@ -2,20 +2,29 @@
 
 namespace Emsephron\TallDatatable\Concerns;
 
+use Closure;
 use Emsephron\TallDatatable\Enums\ErrorMode;
 
 trait HasErrorMode
 {
-    protected string $errorMode = 'alert';
+    /**
+     * @var string|Closure(int, string): void
+     */
+    protected string|Closure $errorMode = 'alert';
 
-    public function errorMode(ErrorMode $errorMode): static
+    public function errorMode(ErrorMode|Closure $errorMode): static
     {
-        $this->errorMode = $errorMode->value;
+        $value = $errorMode instanceof ErrorMode ? $errorMode->value : $errorMode;
+
+        $this->errorMode = $value;
 
         return $this;
     }
 
-    public function getErrorMode(): string
+    /**
+     * @return string|Closure(int, string): void
+     */
+    public function getErrorMode(): string|Closure
     {
         return $this->errorMode;
     }

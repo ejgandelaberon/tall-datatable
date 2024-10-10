@@ -104,8 +104,14 @@ const TallDatatable = (Alpine) => {
             );
         },
 
-        setErrorMode(mode = 'alert') {
-            DataTable.ext.errMode = mode;
+        setErrorMode(mode) {
+            if (typeof mode !== 'string') {
+                DataTable.ext.errMode = async function (_, techNote, message) {
+                    await Livewire.find(livewireId).handleError(techNote, message);
+                };
+            } else {
+                DataTable.ext.errMode = mode;
+            }
         }
     }));
 };
